@@ -14,7 +14,7 @@ using namespace chrono;
 
 class Queue{
 public:
-    explicit Queue(double service_rate);
+    explicit Queue(double mean_service_time);
     ~Queue() = default;
 
     shared_ptr<Job> get_job_by_id(uint32_t job_id);
@@ -23,13 +23,13 @@ public:
 
     bool is_empty();
 
-    microseconds get_service_time();
+    duration<double> get_service_time();
 
     const vector<shared_ptr<Job>>& get_jobs_p() const;
 
 private:
     vector<shared_ptr<Job> > jobs_p;
-    double service_rate;
+    double mean_service_time;
 public:
     double get_service_rate() const;
 };

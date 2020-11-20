@@ -24,7 +24,7 @@ enum Event_function{
 
 struct Event{
     // Todo: Add attributes of an event here
-    time_point<steady_clock, microseconds> time;
+    time_point<steady_clock, duration<double> > time;
     shared_ptr<Job> job;
     Event_function func;
 
@@ -34,14 +34,14 @@ struct Event{
 
 class Event_stack{
 public:
-    Event_stack(double arrival_rate, double q1_service_rate, double q2_service_rate);
+    Event_stack(double arrival_rate, double q1_mean_service_time, double q2_mean_service_time);
 
     void start();
 
     const Queue& get_finished_jobs() const;
 
 private:
-    time_point<steady_clock, microseconds> time;
+    time_point<steady_clock, duration<double> > time;
     double arrival_rate;
 
     // Handling doubly linked list
@@ -62,7 +62,7 @@ private:
     int event_handler(shared_ptr<Event> event_p);
     int job_generator(uint32_t number_of_jobs);
 
-    std::chrono::microseconds get_exp_dist_time() const;
+    duration<double> get_exp_dist_time() const;
 };
 
 

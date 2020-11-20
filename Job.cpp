@@ -2,28 +2,22 @@
 // Created by shahrooz on 11/15/20.
 //
 
+#include <iomanip>
 #include "Job.h"
 #include "Queue.h"
 
 
 uint32_t Job::number_of_instances = 0;
 
-std::chrono::microseconds get_service_time(std::chrono::microseconds mean_service_time){
-    static std::default_random_engine e(std::chrono::system_clock::now().time_since_epoch().count());
-    std::exponential_distribution<double> exp_dist(mean_service_time.count() / 1.0e6);
-
-    return std::chrono::microseconds(static_cast<int64_t>(exp_dist(e) * 1.0e6));
-}
-
 const uint32_t Job::get_id() const{
     return id;
 }
 
-const time_point<steady_clock, microseconds>& Job::get_arrival_time() const{
+const time_point<steady_clock, duration<double>>& Job::get_arrival_time() const{
     return arrival_time;
 }
 
-const microseconds& Job::get_sojourn_time() const{
+const duration<double>& Job::get_sojourn_time() const{
     return sojourn_time;
 }
 
@@ -35,11 +29,11 @@ const vector<Queue_info>& Job::get_queues() const{
     return queues;
 }
 
-Job::Job(const time_point<steady_clock, microseconds>& arrival_time) :
+Job::Job(const time_point<steady_clock, duration<double> >& arrival_time) :
         id{number_of_instances++}, arrival_time{arrival_time}, description{""}, sojourn_time{0}{
 }
 
-int Job::service_start(time_point<steady_clock, microseconds> service_start_tp){
+int Job::service_start(time_point<steady_clock, duration<double> > service_start_tp){
     queues.back().service_start_tp = service_start_tp;
     return 0;
 }
@@ -62,12 +56,12 @@ int Job::finish_job(){
     return 0;
 }
 
-ostream& operator<<(ostream& out, const microseconds& dur){
+ostream& operator<<(ostream& out, const duration<double>& dur){
     out << dur.count();
     return out;
 }
 
-ostream& operator<<(ostream& out, const time_point<steady_clock, microseconds>& tp){
+ostream& operator<<(ostream& out, const time_point<steady_clock, duration<double> >& tp){
     out << tp.time_since_epoch().count();
     return out;
 }
@@ -78,8 +72,8 @@ ostream& operator<<(ostream& out, const Job& job){
         if(it->queue_p->get_service_rate() == 0){
             break;
         }
-        out << it->arrival_tp << " " << it->service_start_tp << " " << it->service_time << " " << it->departure_tp << endl;
+        out << fixed << setprecision(6) << it->arrival_tp << " " << it->service_start_tp << " " << it->service_time << " " << it->departure_tp << endl;
     }
-    out << "sojourn time: " << job.get_sojourn_time() << " microseconds" << endl << endl;
+    out << "sojourn time: " << job.get_sojourn_time() << "s" << endl << endl;
     return out;
 }

@@ -29,15 +29,22 @@ int Queue::add_job(shared_ptr<Job> job) {
     return 0;
 }
 
-Queue::Queue(double service_rate) : service_rate{service_rate}{
+Queue::Queue(double mean_service_time) : mean_service_time{mean_service_time}{
 }
 
-microseconds Queue::get_service_time(){
+std::chrono::duration<double> Queue::get_service_time(){
     static std::default_random_engine e(std::chrono::system_clock::now().time_since_epoch().count());
-    std::exponential_distribution<double> exp_dist(1. / service_rate);
+    std::exponential_distribution<double> exp_dist(1. / mean_service_time);
 
-    return std::chrono::microseconds(static_cast<int64_t>(exp_dist(e) * 1.0e6));
+    return std::chrono::duration<double>(exp_dist(e));
 }
+
+//microseconds Queue::get_service_time(){
+//    static std::default_random_engine e(std::chrono::system_clock::now().time_since_epoch().count());
+//    std::exponential_distribution<double> exp_dist(1. / service_rate);
+//
+//    return std::chrono::microseconds(static_cast<int64_t>(exp_dist(e) * 1.0e6));
+//}
 
 bool Queue::is_empty(){
     return jobs_p.empty();
@@ -48,5 +55,5 @@ const vector<shared_ptr<Job>>& Queue::get_jobs_p() const{
 }
 
 double Queue::get_service_rate() const{
-    return service_rate;
+    return mean_service_time;
 }

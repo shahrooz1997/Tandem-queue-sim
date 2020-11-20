@@ -6,8 +6,8 @@
 #include <thread>
 #include <assert.h>
 
-Event_stack::Event_stack(double arrival_rate, double q1_service_rate, double q2_service_rate) :
-                            q1(q1_service_rate), q2(q2_service_rate), finished_jobs(0), arrival_rate{arrival_rate},
+Event_stack::Event_stack(double arrival_rate, double q1_mean_service_time, double q2_mean_service_time) :
+                            q1(q1_mean_service_time), q2(q2_mean_service_time), finished_jobs(0), arrival_rate{arrival_rate},
                             number_of_arrived_jobs{0}, time{time_point_cast<milliseconds>(steady_clock::now())},
                             head{nullptr}, tail{nullptr}{
 }
@@ -179,9 +179,9 @@ int Event_stack::event_handler(shared_ptr<Event> event_p){
 }
 
 int Event_stack::job_generator(uint32_t number_of_jobs){
-    time_point<steady_clock, microseconds> timer = time_point_cast<microseconds>(steady_clock::now());
+    time_point<steady_clock, duration<double> > timer = time_point_cast<duration<double> >(steady_clock::now());
     while(number_of_arrived_jobs < number_of_jobs){
-        microseconds dur = get_exp_dist_time();
+        duration<double> dur = get_exp_dist_time();
         timer += dur;
 
         // Create a job arrival event to queue 1
@@ -197,11 +197,11 @@ int Event_stack::job_generator(uint32_t number_of_jobs){
     return 0;
 }
 
-std::chrono::microseconds Event_stack::get_exp_dist_time() const{
+duration<double> Event_stack::get_exp_dist_time() const{
     static std::default_random_engine e(std::chrono::system_clock::now().time_since_epoch().count());
-    std::exponential_distribution<double> exp_dist(1. / arrival_rate);
+    std::exponential_distribution<double> exp_dist(arrival_rate);
 
-    return std::chrono::microseconds(static_cast<int64_t>(exp_dist(e) * 1.0e6));
+    return duration<double>(exp_dist(e));
 }
 
 const Queue& Event_stack::get_finished_jobs() const{

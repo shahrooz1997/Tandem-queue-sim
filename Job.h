@@ -17,32 +17,32 @@ class Queue; // forward declaration
 
 struct Queue_info{
     Queue* queue_p;
-    time_point<steady_clock, microseconds> arrival_tp;
-    time_point<steady_clock, microseconds> service_start_tp;
-    microseconds service_time;
-    time_point<steady_clock, microseconds> departure_tp;
+    time_point<steady_clock, duration<double> > arrival_tp;
+    time_point<steady_clock, duration<double> > service_start_tp;
+    duration<double> service_time;
+    time_point<steady_clock, duration<double> > departure_tp;
 };
 
 // Todo: Add attributes of an event here
 class Job{
 public:
-    explicit Job(const time_point<steady_clock, microseconds>& arrival_time);
+    explicit Job(const time_point<steady_clock, duration<double> >& arrival_time);
 
-    int service_start(time_point<steady_clock, microseconds> service_start_tp);
+    int service_start(time_point<steady_clock, duration<double> > service_start_tp);
     int move_to_queue(Queue& new_queue);
     int finish_job();
 
     // Getters
     const uint32_t get_id() const;
-    const time_point<steady_clock, microseconds>& get_arrival_time() const;
-    const microseconds& get_sojourn_time() const;
+    const time_point<steady_clock, duration<double> >& get_arrival_time() const;
+    const duration<double>& get_sojourn_time() const;
     const string& get_description() const;
     const vector<Queue_info>& get_queues() const;
 
 private:
     const uint32_t id;
-    time_point<steady_clock, microseconds> arrival_time;
-    microseconds sojourn_time;
+    time_point<steady_clock, duration<double> > arrival_time;
+    duration<double> sojourn_time;
     string description;
 
     vector<Queue_info> queues; // The last one is the queue that the job is in.
