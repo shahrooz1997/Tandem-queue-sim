@@ -36,7 +36,7 @@ class Event_stack{
 public:
     Event_stack(double arrival_rate, double q1_mean_service_time, double q2_mean_service_time);
 
-    void start();
+    void run();
 
     const Queue& get_finished_jobs() const;
 

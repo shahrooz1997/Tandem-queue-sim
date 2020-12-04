@@ -8,6 +8,7 @@
 #include <vector>
 #include "Job.h"
 #include <memory>
+#include <iostream>
 
 using namespace std;
 using namespace chrono;
@@ -27,12 +28,15 @@ public:
 
     const vector<shared_ptr<Job>>& get_jobs_p() const;
 
+    double get_service_rate() const;
+
 private:
     vector<shared_ptr<Job> > jobs_p;
     double mean_service_time;
-public:
-    double get_service_rate() const;
+
+    friend ostream& operator<<(ostream& out, const Queue& queue);
 };
 
+ostream& operator<<(ostream& out, const Queue& queue);
 
 #endif //CSE517_EVAL_QUEUE_H

@@ -39,6 +39,8 @@ public:
     const string& get_description() const;
     const vector<Queue_info>& get_queues() const;
 
+    bool operator!=(const Job& job);
+
 private:
     const uint32_t id;
     time_point<steady_clock, duration<double> > arrival_time;

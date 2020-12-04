@@ -77,3 +77,7 @@ ostream& operator<<(ostream& out, const Job& job){
     out << "sojourn time: " << job.get_sojourn_time() << "s" << endl << endl;
     return out;
 }
+
+bool Job::operator!=(const Job& job){
+    return this->get_id() == job.get_id();
+}

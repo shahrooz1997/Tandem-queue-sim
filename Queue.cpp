@@ -57,3 +57,9 @@ const vector<shared_ptr<Job>>& Queue::get_jobs_p() const{
 double Queue::get_service_rate() const{
     return mean_service_time;
 }
+
+ostream& operator<<(ostream& out, const Queue& queue){
+    for(auto it = queue.get_jobs_p().begin(); it != queue.get_jobs_p().end(); it++){
+        cout << *(*it);
+    }
+}
