@@ -88,7 +88,7 @@ duration<double> get_mean_sojourn_time(const Event_stack& event_stack){
 
 void run_hundred_times(){
     for(int i = 0; i < 100; i++){
-        Event_stack event_stack(7, .1, .05);
+        Event_stack event_stack(1, .1, .05);
         event_stack.run();
 
         cout << get_mean_sojourn_time_in_q(event_stack, 0).count() << " " <<
