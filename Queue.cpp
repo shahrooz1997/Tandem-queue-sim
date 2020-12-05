@@ -34,11 +34,11 @@ Queue::Queue(double mean_service_time) : mean_service_time{mean_service_time}{
 
 std::chrono::duration<double> Queue::get_service_time(){
     static std::default_random_engine e(std::chrono::system_clock::now().time_since_epoch().count());
-//    std::exponential_distribution<double> exp_dist(1. / mean_service_time);
-    std::normal_distribution<double> normal_dist(mean_service_time, 0.01);
+    std::exponential_distribution<double> exp_dist(1. / mean_service_time);
+//    std::normal_distribution<double> normal_dist(mean_service_time, 0.01);
 
-//    return std::chrono::duration<double>(exp_dist(e));
-    return std::chrono::duration<double>(normal_dist(e));
+    return std::chrono::duration<double>(exp_dist(e));
+//    return std::chrono::duration<double>(normal_dist(e));
 }
 
 //microseconds Queue::get_service_time(){
