@@ -63,6 +63,7 @@ private:
     int job_generator(uint32_t number_of_jobs);
 
     duration<double> get_exp_dist_time() const;
+    duration<double> get_norm_dist_time() const;
 };
 
 

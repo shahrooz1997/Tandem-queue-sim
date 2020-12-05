@@ -9,7 +9,7 @@
 int Event_stack::job_generator(uint32_t number_of_jobs){
     time_point<steady_clock, duration<double> > timer = time_point_cast<duration<double> >(steady_clock::now());
     while(number_of_arrived_jobs < number_of_jobs){
-        duration<double> dur = get_exp_dist_time();
+        duration<double> dur = get_norm_dist_time();
         timer += dur;
 
         // Create a job arrival event to queue 1
@@ -202,6 +202,13 @@ duration<double> Event_stack::get_exp_dist_time() const{
     std::exponential_distribution<double> exp_dist(arrival_rate);
 
     return duration<double>(exp_dist(e));
+}
+
+std::chrono::duration<double> Event_stack::get_norm_dist_time() const{
+    static std::default_random_engine e(std::chrono::system_clock::now().time_since_epoch().count());
+    std::normal_distribution<double> normal_dist(1. / arrival_rate, 0.01);
+
+    return std::chrono::duration<double>(normal_dist(e));
 }
 
 const Queue& Event_stack::get_finished_jobs() const{
